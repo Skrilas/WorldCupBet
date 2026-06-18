@@ -7,7 +7,5 @@ class TimeRepository:
 
     def salvar(self, time: Time):
         self.session.add(time)
-        self.session.commit()
-        self.session.refresh(time)
 
         return time

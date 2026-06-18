@@ -1,18 +1,8 @@
-from sqlmodel import Session,SQLModel
-from database import engine
-from models.time import Time
+from services.time_service import TimeService
+import requests
 
 if __name__ == "__main__":
-    # Cria as tabelas caso não existam
-    SQLModel.metadata.create_all(engine)
+    TimeService.criar_times()
 
-    novo_time = Time(
-        nome="Grêmio"
-    )
-
-    with Session(engine) as session:
-        session.add(novo_time)
-        session.commit()
-        session.refresh(novo_time)
-
-    print(f"Time criado com ID {novo_time.id}")
+    # print(requests.get("https://1.1.1.1", timeout=10).status_code)
+    # print(requests.get("https://google.com", timeout=10).status_code)
