@@ -1,7 +1,7 @@
 from sqlmodel import Session
-import requests
 
 from repository.partida_repository import PartidaRepository
+from repository.time_repository import TimeRepository
 from services.gerenciador_api import GerenciadorApi
 from schemas.partida_read import PartidaRead
 from schemas.api_partida import ApiPartida
@@ -35,38 +35,46 @@ class PartidaService:
     @staticmethod
     def mostrar_partida(id: int):
         with Session(engine) as session:
-            repo = PartidaRepository(session)
-            partida = repo.buscar_por_id(id=id)
+            partida_repo = PartidaRepository(session)
+            time_repo = TimeRepository(session)
+            partida = partida_repo.buscar_por_id(id=id)
             
             if not partida:
                 raise ValueError("Partida não encontrada.")
+            
+            home = time_repo.buscar_por_id(partida.home_team_id)
+            away = time_repo.buscar_por_id(partida.away_team_id)
+            vencedor = None #Caso o jogo empate ou não tenha terminado
+            if partida.id_vencedor:
+                vencedor = time_repo.buscar_por_id(partida.id_vencedor)
+            
             return PartidaRead(
                 id=partida.id,
                 home_team_id=partida.home_team_id,
                 away_team_id=partida.away_team_id,
 
-                # home_team_name=TimeService.buscar_por_id(partida.home_team_id),
-                # away_team_name=TimeService.buscar_por_id(partida.away_team_id),
+                home_team_name=home.nome,
+                away_team_name=away.nome,
 
                 home_scorers=partida.gols_home,
                 away_scorers=partida.gols_away,
                 local_date=partida.data_hora,
                 finished=partida.terminou,
 
-                id_vencedor=partida.id_vencedor
-                # vencedor_name=TimeService.buscar_por_id(partida.id_vencedor)
+                id_vencedor=partida.id_vencedor,
+                vencedor_name=vencedor.nome if vencedor else None
             )
 
 
-
-    def atualizar_status(self, id: int, status: bool, vencedor: int | None):
+    @staticmethod
+    def atualizar_status(id: int, terminou: bool, id_vencedor: int | None):
         with Session(engine) as session:
             repo = PartidaRepository(session)
             partida = repo.buscar_por_id(id=id)
 
             if not partida:
                 raise ValueError("Partida não encontrada.")
-            partida.terminou = status
-            partida.id_vencedor = vencedor
+            partida.terminou = terminou
+            partida.id_vencedor = id_vencedor
 
             session.commit()
