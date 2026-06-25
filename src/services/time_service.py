@@ -1,6 +1,5 @@
 from sqlmodel import Session
 from database import engine
-import requests
 
 from models.time import Time
 from repository.time_repository import TimeRepository

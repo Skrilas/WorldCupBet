@@ -9,3 +9,6 @@ class TimeRepository:
         self.session.add(time)
 
         return time
+    
+    def buscar_por_id(self, id: int):
+        return self.session.get(Time, id)
