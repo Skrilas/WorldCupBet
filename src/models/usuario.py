@@ -13,3 +13,4 @@ class Usuario(SQLModel, table=True):
     pontos: Decimal = Field(default=Decimal("100.00"), max_digits=12, decimal_places=2)
     palpites_corretos: int = Field(default=0)
     ativo: bool = Field(default=True)
+    admin: bool = Field(default=False)

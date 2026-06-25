@@ -8,7 +8,4 @@ class UsuarioCreate(BaseModel):
     cpf: str
     data_nascimento: date
     login: str
-    senha: str 
-    pontos: Decimal = Decimal("100.00")
-    palpites_corretos: int = 0
-    ativo: bool = True
+    senha: str
