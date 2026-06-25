@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlmodel import Session, select
 from models.apostas import Apostas
 
 class ApostasRepository:
@@ -8,8 +8,9 @@ class ApostasRepository:
     def salvar(self, apostas: Apostas):
         self.session.add(apostas)
 
-    def buscar_por_id(self, id: int):
-        return self.session.get(Apostas, id)
+    def buscar_por_id_partida(self, id: int):
+        statement = select(Apostas).where(Apostas.partida_id == id)
+        return self.session.exec(statement).first()
 
     def excluir(self, id: id):
         apostas = self.buscar_por_id(id)

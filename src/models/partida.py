@@ -11,3 +11,4 @@ class Partida(SQLModel, table=True):
     data_hora: datetime = Field(sa_column=Column(DateTime(timezone=True)))
     terminou: bool = Field(default=False)
     id_vencedor: int | None = Field(default=None)
+    aposta_ativa: bool = Field(default=False)
