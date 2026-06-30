@@ -6,6 +6,7 @@ from repository.time_repository import TimeRepository
 from schemas.api_time import ApiTime
 from services.gerenciador_api import GerenciadorApi
 
+#USO ÚNICO PARA O PREENCHIMENTO DO BANCO!
 class TimeService:
     
     @staticmethod

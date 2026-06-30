@@ -2,6 +2,9 @@ from sqlmodel import Session
 
 from repository.partida_repository import PartidaRepository
 from repository.apostas_repository import ApostasRepository
+from repository.time_repository import TimeRepository
+from schemas.overview_apostas import OverviewApostas
+from schemas.times_da_partida import TimesDaPartida
 from models.usuario import Usuario
 from database import engine
 
@@ -22,13 +25,56 @@ class ApostasAdminService:
             session.commit()
         return True
     
-    @staticmethod
-    def buscar_aposta_da_partida(id_partida: int): #Recebe o id de Partida para busca
+    @staticmethod #Se não for usado em outra função além de overview_apostas_da_partida, fazer dentro da def e apagar essa
+    def buscar_times_da_partida(id_partida: int):
+        with Session(engine) as session:
+            partida_repo = PartidaRepository(session)
+            time_repo = TimeRepository(session)
+            
+            partida = partida_repo.buscar_por_id(id_partida)
+            if not partida:
+                raise ValueError("Partida não encontrada.")
+            
+            return TimesDaPartida(
+                away_team = time_repo.buscar_por_id(partida.away_team_id),
+                home_team = time_repo.buscar_por_id(partida.home_team_id)
+            )
+            
+        
+    @classmethod
+    def overview_apostas_da_partida(cls, id_partida: int): #FAZER TESTES DE FUNCIONAMENTO!!!!
+        times = cls.buscar_times_da_partida(id_partida)
+        
         with Session(engine) as session:
             repo = ApostasRepository(session)
+            dados = repo.estatisticas_aposta_partida(id_partida) #Retorna uma lista pra cada time
             
-            aposta = repo.buscar_por_id_partida(id_partida)
+            if not dados:
+                raise ValueError("Ainda não há apostas nesta partida.")
             
-            if not aposta:
-                raise ValueError("Nenhuma aposta encontrada para esta partida.")
-            return aposta
+            #inicializar variáveis pra evitar erro por falta de aposta em um time
+            total_apostadores_home = 0
+            total_pontos_home = 0
+            total_apostadores_away = 0
+            total_pontos_away = 0
+            
+            for time in dados: #Nomeia cada dado de acordo com o OverviewApostas
+                if time.time_id == times.away_team.id:
+                    total_apostadores_away = time.total_apostadores
+                    total_pontos_away = time.total_pontos
+                elif time.time_id == times.home_team.id:
+                    total_apostadores_home = time.total_apostadores
+                    total_pontos_home = time.total_pontos
+                else:
+                    raise ValueError(f"Foi encontrada uma aposta para um time inválido na partida {id_partida}.")
+                
+                    
+                
+        return OverviewApostas(
+            total_apostadores=(total_apostadores_away+total_apostadores_home),
+            total_pontos=(total_pontos_away+total_pontos_home),
+            away_team_name=times.away_team.nome,
+            home_team_name=times.home_team.nome,
+            total_pontos_away=total_pontos_away,
+            total_pontos_home=total_pontos_home
+        )
