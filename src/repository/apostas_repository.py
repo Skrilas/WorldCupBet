@@ -9,8 +9,8 @@ class ApostasRepository:
     def salvar(self, apostas: Apostas):
         self.session.add(apostas)
 
-    def buscar_por_id_partida(self, id: int):
-        statement = select(Apostas).where(Apostas.partida_id == id)
+    def buscar_por_id_partida(self, id_partida: int, id_usuario: int):
+        statement = select(Apostas).where(Apostas.partida_id == id_partida, Apostas.usuario_id == id_usuario )
         return self.session.exec(statement).first()
 
     def excluir(self, id: id):
