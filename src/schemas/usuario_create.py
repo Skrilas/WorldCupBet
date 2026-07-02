@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 from datetime import date
-from decimal import Decimal
 
 class UsuarioCreate(BaseModel):
     nome: str
