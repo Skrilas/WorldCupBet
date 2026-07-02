@@ -25,7 +25,7 @@ class ApostasAdminService:
             session.commit()
         return True
     
-    @staticmethod #Se não for usado em outra função além de overview_apostas_da_partida, fazer dentro da def e apagar essa
+    @staticmethod
     def buscar_times_da_partida(id_partida: int):
         with Session(engine) as session:
             partida_repo = PartidaRepository(session)
@@ -58,7 +58,7 @@ class ApostasAdminService:
             total_apostadores_away = 0
             total_pontos_away = 0
             
-            for time in dados: #Nomeia cada dado de acordo com o OverviewApostas
+            for time in dados: #Nomeia cada dado de acordo com o shcema de OverviewApostas
                 if time.time_id == times.away_team.id:
                     total_apostadores_away = time.total_apostadores
                     total_pontos_away = time.total_pontos
