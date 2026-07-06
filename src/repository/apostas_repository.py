@@ -1,5 +1,7 @@
 from sqlmodel import Session, select
 from sqlalchemy import func
+
+from schemas.estatistica_aposta import EstatisticaAposta
 from models.apostas import Apostas
 
 class ApostasRepository:
@@ -9,7 +11,7 @@ class ApostasRepository:
     def salvar(self, apostas: Apostas):
         self.session.add(apostas)
 
-    def buscar_por_id_partida(self, id_partida: int, id_usuario: int):
+    def buscar_por_id_partida(self, id_partida: int, id_usuario: int) -> Apostas | None:
         statement = select(Apostas).where(Apostas.partida_id == id_partida, Apostas.usuario_id == id_usuario )
         return self.session.exec(statement).first()
 
@@ -19,7 +21,7 @@ class ApostasRepository:
             raise ValueError("Aposta não encontrada.")
         self.session.delete(apostas)
      
-    def estatisticas_aposta_partida(self, id_partida: int): #não retorna a odd, pois a odd é um dado único por usuário
+    def obter_estatisticas_aposta(self, id_partida: int) -> list[EstatisticaAposta]: #não retorna a odd, pois a odd é um dado único por usuário
         statement = (
             select(
                 Apostas.time_id,
@@ -29,4 +31,6 @@ class ApostasRepository:
             .where(Apostas.partida_id == id_partida)
             .group_by(Apostas.time_id)
         )
-        return self.session.exec(statement).all()
+        resultado = self.session.exec(statement).all()
+
+        return [EstatisticaAposta(**linha._mapping) for linha in resultado]

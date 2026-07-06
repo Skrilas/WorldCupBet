@@ -8,12 +8,16 @@ class UsuarioRepository:
     def salvar(self, usuario: Usuario):
         self.session.add(usuario)
 
-    def buscar_por_id(self, id: int):
+    def buscar_por_id(self, id: int) -> Usuario | None:
         return self.session.get(Usuario, id)
+    
+    def buscar_por_id_atualizar(self, id:int) -> Usuario | None:
+        statement = select(Usuario).where(Usuario.id == id).with_for_update()
+        return self.session.exec(statement).first()
 
-    def listar(self):
+    def listar(self) -> list[Usuario]:
         return self.session.exec(select(Usuario)).all()
     
-    def buscar_por_email(self, email: str):
+    def buscar_por_email(self, email: str) -> Usuario | None:
         statement = select(Usuario).where(Usuario.email == email)
         return self.session.exec(statement).first()

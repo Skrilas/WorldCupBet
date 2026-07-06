@@ -10,5 +10,5 @@ class TimeRepository:
 
         return time
     
-    def buscar_por_id(self, id: int):
+    def buscar_por_id(self, id: int) -> Time | None:
         return self.session.get(Time, id)

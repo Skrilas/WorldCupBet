@@ -8,7 +8,7 @@ class PartidaRepository:
     def salvar(self, partida: Partida):
         self.session.add(partida)
 
-    def buscar_por_id(self, id: int):
+    def buscar_por_id(self, id: int) -> Partida | None:
         return self.session.get(Partida, id)
 
     def excluir(self, id: int):
