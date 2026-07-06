@@ -47,7 +47,7 @@ class ApostasAdminService:
         
         with Session(engine) as session:
             repo = ApostasRepository(session)
-            dados = repo.estatisticas_aposta_partida(id_partida) #Retorna uma lista pra cada time
+            dados = repo.buscar_por_id_partida(id_partida) #Retorna uma lista pra cada time
             
             if not dados:
                 raise ValueError("Ainda não há apostas nesta partida.")

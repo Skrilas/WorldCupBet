@@ -4,6 +4,7 @@ from datetime import datetime, UTC
 
 from repository.apostas_repository import ApostasRepository
 from repository.partida_repository import PartidaRepository
+from repository.usuario_repository import UsuarioRepository
 from schemas.apostas_create import ApostasCreate
 from schemas.apostas_read import ApostasRead
 from models.apostas import Apostas
@@ -14,7 +15,10 @@ class ApostaService:
     @staticmethod
     def calcular_odd(session: Session, id_partida: int, time_apostado_id: int):
             repo = ApostasRepository(session)
-            estatistica = repo.estatisticas_aposta_partida(id_partida)
+
+            estatistica = repo.obter_estatisticas_aposta(id_partida)
+            if not estatistica:
+                raise ValueError("Ainda não há apostas nesta partida.")
 
             meu_time = 0
             outro_time = 0
@@ -34,6 +38,8 @@ class ApostaService:
         with Session(engine) as session:
             partida_repo = PartidaRepository(session)
             aposta_repo = ApostasRepository(session)
+            usuario_repo = UsuarioRepository(session)
+
             partida = partida_repo.buscar_por_id(id_partida)
             if not partida:
                 raise ValueError("Partida não encontrada.")
@@ -47,9 +53,15 @@ class ApostaService:
             if id_time not in (partida.home_team_id, partida.away_team_id):
                 raise ValueError("Time inválido para esta partida.")
 
-            if not UsuarioService.valida_pontos(id_usuario, pontos_apostados):
+            usuario = usuario_repo.buscar_por_id_atualizar(id_usuario)
+            if not usuario:
+                raise ValueError("Usuário não encontrado.")
+            
+            if usuario.pontos < pontos_apostados:
                 raise ValueError("Usuário não possui pontos suficientes.")
             
+            usuario.pontos -= pontos_apostados
+
             aposta = ApostasCreate(
                 usuario_id= id_usuario,
                 partida_id= id_partida,
@@ -57,9 +69,11 @@ class ApostaService:
                 qtd_pontos= pontos_apostados,
                 odd= cls.calcular_odd(session=session, id_partida=id_partida, time_apostado_id=id_time)
             )
+
             aposta_repo.salvar(
                 Apostas(**aposta.model_dump())
             )
+            session.commit()
 
 
 
@@ -85,10 +99,32 @@ class ApostaService:
 
 
     @staticmethod
-    def multiplicar_aposta(id_usuario, id_partida):
+    def multiplicar_aposta(id_usuario, id_partida, multiplicador):
         with Session(engine) as session:
-            repo = ApostasRepository(engine)
-            # Em produção
+            aposta_repo = ApostasRepository(session)
+            usuario_repo = UsuarioRepository(session)
+
+            aposta_usuario = aposta_repo.buscar_por_id_partida(id_partida=id_partida, id_usuario=id_usuario)
+            if not aposta_usuario:
+                raise ValueError("Usuário não apostou nesta partida.")
+            
+            usuario = usuario_repo.buscar_por_id_atualizar(id_usuario)
+            if not usuario:
+                raise ValueError("Usuário não encontrado.")
+            
+            if multiplicador <= 1:
+                raise ValueError("O multiplicador deve ser maior que 1.")
+            
+            pontos_multiplicados = aposta_usuario.qtd_pontos * multiplicador
+            pontos_faltantes = pontos_multiplicados - aposta_usuario.qtd_pontos
+            if usuario.pontos < pontos_faltantes:
+                raise ValueError("Usuário não possui pontos suficientes.")
+            
+            usuario.pontos -= pontos_faltantes
+            aposta_usuario.qtd_pontos = pontos_multiplicados
+
+            session.commit()
+
 
     
     def cancelar_aposta(self):
