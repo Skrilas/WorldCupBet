@@ -14,5 +14,5 @@ class PartidaRead(BaseModel):
     local_date: datetime
     finished: bool
 
-    id_vencedor: int | None
+    vencedor_id: int | None
     vencedor_name: str | None

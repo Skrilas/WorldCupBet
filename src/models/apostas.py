@@ -2,7 +2,7 @@ from sqlmodel import SQLModel, Field
 from sqlalchemy import UniqueConstraint
 from decimal import Decimal
 
-from enum.status_aposta import StatusAposta
+from enums.status_aposta import StatusAposta
 
 class Apostas(SQLModel, table=True):
     __table_args__ = (   # Impede registros duplicados para a combinação (usuario_id, partida_id).
