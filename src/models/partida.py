@@ -10,5 +10,5 @@ class Partida(SQLModel, table=True):
     gols_away: int = Field(default=0)
     data_hora: datetime = Field(sa_column=Column(DateTime(timezone=True)))
     terminou: bool = Field(default=False)
-    vencedor_id: int | None = Field(default=None)
+    vencedor_id: int | None = Field(foreign_key='time.id', default=None)
     aposta_ativa: bool = Field(default=False)
