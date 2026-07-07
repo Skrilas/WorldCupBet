@@ -35,26 +35,21 @@ class PartidaService:
     @staticmethod
     def mostrar_partida(id: int):
         with Session(engine) as session:
-            partida_repo = PartidaRepository(session)
-            time_repo = TimeRepository(session)
-            partida = partida_repo.buscar_por_id(id=id)
+            repo = PartidaRepository(session)
+            resultado = repo.buscar_por_id_com_times(id)
             
-            if not partida:
+            if resultado is None:
                 raise ValueError("Partida não encontrada.")
             
-            home = time_repo.buscar_por_id(partida.home_team_id)
-            away = time_repo.buscar_por_id(partida.away_team_id)
-            vencedor = None #Caso o jogo empate ou não tenha terminado
-            if partida.vencedor_id:
-                vencedor = time_repo.buscar_por_id(partida.vencedor_id)
+            partida, home_name, away_name, vencedor_name = resultado
             
             return PartidaRead(
                 id=partida.id,
                 home_team_id=partida.home_team_id,
                 away_team_id=partida.away_team_id,
 
-                home_team_name=home.nome,
-                away_team_name=away.nome,
+                home_team_name=home_name,
+                away_team_name=away_name,
 
                 home_scorers=partida.gols_home,
                 away_scorers=partida.gols_away,
@@ -62,7 +57,7 @@ class PartidaService:
                 finished=partida.terminou,
 
                 vencedor_id=partida.vencedor_id,
-                vencedor_name=vencedor.nome if vencedor else None
+                vencedor_name=vencedor_name
             )
 
 
