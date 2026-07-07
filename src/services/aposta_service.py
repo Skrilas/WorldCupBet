@@ -6,6 +6,7 @@ from repository.apostas_repository import ApostasRepository
 from repository.partida_repository import PartidaRepository
 from repository.usuario_repository import UsuarioRepository
 from schemas.apostas_create import ApostasCreate
+from schemas.partida_read import PartidaRead
 from schemas.apostas_read import ApostasRead
 from models.apostas import Apostas
 from database import engine
@@ -130,8 +131,29 @@ class ApostaService:
     def cancelar_aposta(self):
         pass
     
-    def mostrar_apostas_ativas(self):
-        pass
+    def mostrar_apostas_ativas(self) -> list[PartidaRead]: #Criar um schema que mostre só as informações nescessárias
+        with Session(engine) as session:
+            repo = PartidaRepository(session)
+            apostas_ativas = repo.mostrar_partidas_ativas()
+
+            return [
+                PartidaRead(
+                    id=partida.id,
+                    home_team_id=partida.home_team_id,
+                    away_team_id=partida.away_team_id,
+                    home_team_name=home_name,
+                    away_team_name=away_name,
+                    home_scorers=partida.gols_home,
+                    away_scorers=partida.gols_away,
+                    local_date=partida.data_hora,
+                    finished=partida.terminou,
+                    vencedor_id=partida.vencedor_id,
+                    vencedor_name=vencedor_name,
+                )
+            for partida, home_name, away_name, vencedor_name in apostas_ativas
+            ]
+
+
     
     def mostrar_apostas_usuario(self):
         pass
