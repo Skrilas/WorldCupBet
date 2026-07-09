@@ -1,5 +1,6 @@
 from sqlmodel import Session, select
 from sqlalchemy.orm import aliased
+from datetime import datetime, UTC
 
 from models.partida import Partida
 from models.time import Time
@@ -40,7 +41,8 @@ class PartidaRepository:
     def mostrar_partidas_ativas(self) -> list[tuple[Partida, str, str, str | None]]:
         statement = self.__consulta_com_times()
         
-        return self.session.exec(statement.where(Partida.aposta_ativa)).all()
+        return self.session.exec(statement.where(Partida.aposta_ativa, Partida.data_hora > datetime.now(UTC))).all()
+
 
     def buscar_por_id_com_times(self, id: int) -> tuple[Partida, str, str, str | None]| None:
         statement = self.__consulta_com_times()
