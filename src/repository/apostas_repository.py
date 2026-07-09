@@ -14,6 +14,9 @@ class ApostasRepository:
     def buscar_por_id_partida(self, id_partida: int, id_usuario: int) -> Apostas | None:
         statement = select(Apostas).where(Apostas.partida_id == id_partida, Apostas.usuario_id == id_usuario )
         return self.session.exec(statement).first()
+    
+    def listar(self, id_usuario) -> list[Apostas]:
+        return self.session.exec(select(Apostas).where(Apostas.usuario_id == id_usuario)).all()
 
     def excluir(self, id: id):
         apostas = self.buscar_por_id(id)

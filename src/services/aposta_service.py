@@ -6,7 +6,7 @@ from repository.apostas_repository import ApostasRepository
 from repository.partida_repository import PartidaRepository
 from repository.usuario_repository import UsuarioRepository
 from schemas.apostas_create import ApostasCreate
-from schemas.partida_read import PartidaRead
+from schemas.apostas_ativas import ApostasAtivas
 from schemas.apostas_read import ApostasRead
 from models.apostas import Apostas
 from database import engine
@@ -125,35 +125,34 @@ class ApostaService:
             aposta_usuario.qtd_pontos = pontos_multiplicados
 
             session.commit()
-
-
     
-    def cancelar_aposta(self):
-        pass
-    
-    def mostrar_apostas_ativas(self) -> list[PartidaRead]: #Criar um schema que mostre só as informações nescessárias
+    @staticmethod
+    def mostrar_apostas_ativas() -> list[ApostasAtivas]:
         with Session(engine) as session:
             repo = PartidaRepository(session)
             apostas_ativas = repo.mostrar_partidas_ativas()
 
             return [
-                PartidaRead(
+                ApostasAtivas(
                     id=partida.id,
                     home_team_id=partida.home_team_id,
                     away_team_id=partida.away_team_id,
                     home_team_name=home_name,
                     away_team_name=away_name,
-                    home_scorers=partida.gols_home,
-                    away_scorers=partida.gols_away,
-                    local_date=partida.data_hora,
-                    finished=partida.terminou,
-                    vencedor_id=partida.vencedor_id,
-                    vencedor_name=vencedor_name,
+                    local_date=partida.data_hora
                 )
-            for partida, home_name, away_name, vencedor_name in apostas_ativas
+            for partida, home_name, away_name, _ in apostas_ativas
             ]
 
 
-    
-    def mostrar_apostas_usuario(self):
-        pass
+    @staticmethod
+    def mostrar_apostas_usuario(id_usuario: int):
+        with Session(engine) as session:
+            repo = ApostasRepository(session)
+
+            apostas_usuario = repo.listar(id_usuario)
+
+            return[
+                ApostasRead.model_validate(aposta)
+                for aposta in apostas_usuario
+            ]
