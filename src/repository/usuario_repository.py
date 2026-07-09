@@ -18,6 +18,6 @@ class UsuarioRepository:
     def listar(self) -> list[Usuario]:
         return self.session.exec(select(Usuario)).all()
     
-    def buscar_por_email(self, email: str) -> Usuario | None:
-        statement = select(Usuario).where(Usuario.email == email)
+    def buscar_por_cpf(self, cpf: str) -> Usuario | None:
+        statement = select(Usuario).where(Usuario.cpf == cpf)
         return self.session.exec(statement).first()
