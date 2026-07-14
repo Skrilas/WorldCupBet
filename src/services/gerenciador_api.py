@@ -16,7 +16,7 @@ class GerenciadorApi:
             response = requests.get(endpoint, headers=cls.headers, timeout=20)
             response.raise_for_status()
         except requests.RequestException as e:
-            raise Exception(f"Erro ao acessar a API: {e}") from e
+            raise ConnectionError(f"Erro ao acessar a API: {e}") from e
         
         dados = response.json()
         if tipo not in dados:

@@ -1,7 +1,6 @@
 from sqlmodel import Session
 
 from repository.partida_repository import PartidaRepository
-from repository.time_repository import TimeRepository
 from services.gerenciador_api import GerenciadorApi
 from schemas.partida_read import PartidaRead
 from schemas.api_partida import ApiPartida
@@ -12,7 +11,7 @@ from database import engine
 class PartidaService:
 
     @staticmethod
-    def criar_partidas():
+    def criar_partidas() -> None:
         partidas = GerenciadorApi.obter_dados("games")
         with Session(engine) as session:
             repo = PartidaRepository(session)
@@ -33,7 +32,7 @@ class PartidaService:
             session.commit()
 
     @staticmethod
-    def mostrar_partida(id: int):
+    def mostrar_partida(id: int) -> PartidaRead:
         with Session(engine) as session:
             repo = PartidaRepository(session)
             resultado = repo.buscar_por_id_com_times(id)
@@ -62,7 +61,7 @@ class PartidaService:
 
 
     @staticmethod
-    def atualizar_status(id: int, terminou: bool, vencedor_id: int | None):
+    def atualizar_status(id: int, terminou: bool, vencedor_id: int | None) -> None:
         with Session(engine) as session:
             repo = PartidaRepository(session)
             partida = repo.buscar_por_id(id=id)

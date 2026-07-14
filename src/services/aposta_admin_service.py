@@ -11,7 +11,7 @@ from database import engine
 class ApostasAdminService:
     
     @staticmethod
-    def liberar_aposta(id_partida: int, usuario: Usuario):
+    def liberar_aposta(id_partida: int, usuario: Usuario) -> None:
         if not usuario.admin:
             raise PermissionError("Apenas administradores podem liberar apostas.")
         with Session(engine) as session:
@@ -23,10 +23,9 @@ class ApostasAdminService:
             partida.aposta_ativa = True
             
             session.commit()
-        return True
     
     @staticmethod
-    def buscar_times_da_partida(id_partida: int):
+    def buscar_times_da_partida(id_partida: int) -> TimesDaPartida:
         with Session(engine) as session:
             partida_repo = PartidaRepository(session)
             time_repo = TimeRepository(session)
@@ -42,7 +41,7 @@ class ApostasAdminService:
             
         
     @classmethod
-    def overview_apostas_da_partida(cls, id_partida: int): #FAZER TESTES DE FUNCIONAMENTO!!!!
+    def overview_apostas_da_partida(cls, id_partida: int) -> OverviewApostas: #FAZER TESTES DE FUNCIONAMENTO!!!!
         times = cls.buscar_times_da_partida(id_partida)
         
         with Session(engine) as session:

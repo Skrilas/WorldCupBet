@@ -14,7 +14,7 @@ from database import engine
 class ApostaService:
     
     @staticmethod
-    def calcular_odd(session: Session, id_partida: int, time_apostado_id: int):
+    def calcular_odd(session: Session, id_partida: int, time_apostado_id: int) -> Decimal:
             repo = ApostasRepository(session)
 
             estatistica = repo.obter_estatisticas_aposta(id_partida)
@@ -35,7 +35,7 @@ class ApostaService:
             return odd
 
     @classmethod
-    def apostar(cls, id_usuario: int, id_partida: int, id_time: int, pontos_apostados: Decimal):
+    def apostar(cls, id_usuario: int, id_partida: int, id_time: int, pontos_apostados: Decimal) -> None:
         with Session(engine) as session:
             partida_repo = PartidaRepository(session)
             aposta_repo = ApostasRepository(session)
@@ -71,16 +71,16 @@ class ApostaService:
                 odd= cls.calcular_odd(session=session, id_partida=id_partida, time_apostado_id=id_time)
             )
 
-            aposta_repo.salvar(
-                Apostas(**aposta.model_dump())
-            )
+            aposta_model = Apostas(**aposta.model_dump())
+
+            aposta_repo.salvar(aposta_model)
             session.commit()
 
 
 
         
     @staticmethod
-    def mostrar_status_aposta(id_usuario, id_partida): #Recebe o id de Partida para busca
+    def mostrar_status_aposta(id_usuario: int, id_partida: int) -> ApostasRead: #Recebe o id de Partida para busca
         with Session(engine) as session:
             repo = ApostasRepository(session)
             aposta = repo.buscar_por_id_partida(id_partida=id_partida, id_usuario=id_usuario)
@@ -100,7 +100,7 @@ class ApostaService:
 
 
     @staticmethod
-    def multiplicar_aposta(id_usuario, id_partida, multiplicador):
+    def multiplicar_aposta(id_usuario: int, id_partida: int, multiplicador: int) -> None:
         with Session(engine) as session:
             aposta_repo = ApostasRepository(session)
             usuario_repo = UsuarioRepository(session)
@@ -146,7 +146,7 @@ class ApostaService:
 
 
     @staticmethod
-    def mostrar_apostas_usuario(id_usuario: int):
+    def mostrar_apostas_usuario(id_usuario: int) -> list[ApostasRead]:
         with Session(engine) as session:
             repo = ApostasRepository(session)
 

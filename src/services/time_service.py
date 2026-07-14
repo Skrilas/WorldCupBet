@@ -10,7 +10,7 @@ from services.gerenciador_api import GerenciadorApi
 class TimeService:
     
     @staticmethod
-    def criar_times():
+    def criar_times() -> None:
         times = GerenciadorApi.obter_dados("teams")
         with Session(engine) as session:
             repo = TimeRepository(session)
