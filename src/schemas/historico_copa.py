@@ -3,10 +3,10 @@ from pydantic import BaseModel
 class HistoricoCopa(BaseModel):
     ano: int
     colocacao: int | None
-    jogos: int
-    vitorias: int
-    empates: int
-    derrotas: int
-    gols_pro: int
-    gols_contra: int
-    pontos: int
+    jogos: int | None
+    vitorias: int | None
+    empates: int | None
+    derrotas: int | None
+    gols_pro: int | None
+    gols_contra: int | None
+    pontos: int | None
