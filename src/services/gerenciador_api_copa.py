@@ -1,7 +1,7 @@
 from config.settings import settings
 import requests
 
-class GerenciadorApi:
+class GerenciadorApiCopa:
     headers = { #simular um navegador pra obter dados da api
             "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -9,7 +9,7 @@ class GerenciadorApi:
             "Chrome/137.0 Safari/537.36"
             )}
     @classmethod
-    def obter_dados(cls, tipo: str):
+    def obter_dados_copa(cls, tipo: str):
         
         endpoint = f"{settings.api_url}{tipo}" #configura url pra receber o json das partidas
         try:
