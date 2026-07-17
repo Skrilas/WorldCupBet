@@ -43,16 +43,47 @@ class TimeService:
         with Session(engine) as session:
             repo = TimeRepository(session)
 
-            times = repo.listar()
-            return [time
-                     for time in times]
+            return repo.listar()
         
-    @classmethod
-    def buscar_historico_copas(cls, time_id: int) -> list[HistoricoCopa]:
-        time = cls.buscar_time_por_id(time_id)
+    @staticmethod
+    def buscar_historico_copas(time_id: int) -> list[HistoricoCopa]:
+        time = TimeService.buscar_time_por_id(time_id)
 
         historico_copas = GerenciadoApiHistorico.obter_historico_copas_time(time.nome)
         if not historico_copas["appearances"]:
             raise ValueError("O time não possui participações registradas em Copas do Mundo.")
         
-        # return
+        return TimeService._preencher_historico_copa(historico_copas["appearances"])
+    
+    @staticmethod
+    def _preencher_historico_copa(appearances: list[dict]) -> list[HistoricoCopa]:
+        historicos: list[HistoricoCopa] = []
+        for appearance in appearances:
+            group_stage = appearance["groupStage"]
+            if group_stage is None:
+                historicos.append(HistoricoCopa(
+                ano=appearance["year"],
+                colocacao=appearance["finalPosition"],
+                jogos=None,
+                vitorias=None,
+                empates=None,
+                derrotas=None,
+                gols_pro=None,
+                gols_contra=None,
+                pontos=None
+                    )
+                )
+            else:
+                historicos.append(HistoricoCopa(
+                ano=appearance["year"],
+                colocacao=appearance["finalPosition"],
+                jogos=group_stage["played"],
+                vitorias=group_stage["won"],
+                empates=group_stage["drawn"],
+                derrotas=group_stage["lost"],
+                gols_pro=group_stage.get("goalsFor", group_stage.get("gf")),
+                gols_contra=group_stage.get("goalsAgainst", group_stage.get("ga")),
+                pontos=group_stage.get("points", group_stage.get("pts"))
+                    )
+                )
+        return historicos
