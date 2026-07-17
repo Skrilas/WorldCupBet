@@ -1,4 +1,5 @@
-from sqlmodel import Session
+from sqlmodel import Session, select
+
 from models.time import Time
 
 class TimeRepository:
@@ -12,3 +13,6 @@ class TimeRepository:
     
     def buscar_por_id(self, id: int) -> Time | None:
         return self.session.get(Time, id)
+    
+    def listar(self) -> list[Time]:
+        return self.session.exec(select(Time)).all()
