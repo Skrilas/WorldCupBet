@@ -1,5 +1,6 @@
 from repository.apostas_repository import ApostasRepository
 from services.gerenciador_api_historico import GerenciadoApiHistorico
+from services.time_service import TimeService
 from sqlmodel import Session
 from database import engine
 
@@ -8,7 +9,6 @@ if __name__ == "__main__":
         # repo = ApostasRepository(session)
         # resultado = repo.obter_estatisticas_aposta(2)
         # print(resultado)
-    historico = GerenciadoApiHistorico()
-    argentina = historico.obter_historico_time("Argentina")
+    time = TimeService.buscar_historico_copas(9)
 
-    print(argentina)
+    print(time)
