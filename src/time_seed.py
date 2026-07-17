@@ -1,9 +1,14 @@
 from repository.apostas_repository import ApostasRepository
+from services.gerenciador_api_historico import GerenciadoApiHistorico
 from sqlmodel import Session
 from database import engine
 
 if __name__ == "__main__":
-    with Session(engine) as session:
-        repo = ApostasRepository(session)
-        resultado = repo.obter_estatisticas_aposta(2)
-        print(resultado)
+    # with Session(engine) as session:
+        # repo = ApostasRepository(session)
+        # resultado = repo.obter_estatisticas_aposta(2)
+        # print(resultado)
+    historico = GerenciadoApiHistorico()
+    argentina = historico.obter_historico_time("Argentina")
+
+    print(argentina)
