@@ -1,7 +1,7 @@
 from sqlmodel import Session
 
 from repository.partida_repository import PartidaRepository
-from services.gerenciador_api import GerenciadorApi
+from services.gerenciador_api_copa import GerenciadorApiCopa
 from schemas.partida_read import PartidaRead
 from schemas.api_partida import ApiPartida
 from models.partida import Partida
@@ -12,7 +12,7 @@ class PartidaService:
 
     @staticmethod
     def criar_partidas() -> None:
-        partidas = GerenciadorApi.obter_dados("games")
+        partidas = GerenciadorApiCopa.obter_dados_copa("games")
         with Session(engine) as session:
             repo = PartidaRepository(session)
 
