@@ -24,7 +24,10 @@ class UsuarioRepository:
                                     Usuario.pontos.desc()
                                 )
                             ).all()
-    
+    def buscar_por_login(self, login: str) -> Usuario | None:
+        statement = select(Usuario).where(Usuario.login == login)
+        return self.session.exec(statement).first()
+
     def buscar_por_cpf(self, cpf: str) -> Usuario | None:
         statement = select(Usuario).where(Usuario.cpf == cpf)
         return self.session.exec(statement).first()

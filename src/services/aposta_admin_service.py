@@ -5,6 +5,7 @@ from repository.apostas_repository import ApostasRepository
 from repository.time_repository import TimeRepository
 from schemas.overview_apostas import OverviewApostas
 from schemas.times_da_partida import TimesDaPartida
+from services.login_service import LoginService
 from models.usuario import Usuario
 from database import engine
 
@@ -12,8 +13,7 @@ class ApostasAdminService:
     
     @staticmethod
     def liberar_aposta(id_partida: int, usuario: Usuario) -> None:
-        if not usuario.admin:
-            raise PermissionError("Apenas administradores podem liberar apostas.")
+        LoginService.verificar_admin(usuario)
         with Session(engine) as session:
             repo = PartidaRepository(session)
             partida = repo.buscar_por_id(id_partida)
