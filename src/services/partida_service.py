@@ -61,7 +61,7 @@ class PartidaService:
 
 
     @staticmethod
-    def atualizar_status(id: int, terminou: bool, vencedor_id: int | None) -> None:
+    def atualizar_resultado(id: int, terminou: bool, vencedor_id: int | None) -> None:
         with Session(engine) as session:
             repo = PartidaRepository(session)
             partida = repo.buscar_por_id(id=id)
