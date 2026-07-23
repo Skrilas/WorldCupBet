@@ -12,15 +12,16 @@ class PartidaService:
 
     @staticmethod
     def criar_partidas() -> None:
-        partidas = GerenciadorApiCopa.obter_dados_copa("games")
+        partidas = GerenciadorApiCopa.obter_api_partida_copa("games")
         with Session(engine) as session:
             repo = PartidaRepository(session)
 
             for p in partidas:
-                api_partida = ApiPartida(**p)
+                api_partida = ApiPartida.model_validate(p)
 
                 repo.salvar(
                     Partida(
+                        api_id=api_partida.api_id,
                         home_team_id=api_partida.home_team_id,
                         away_team_id=api_partida.away_team_id,
                         gols_home=api_partida.home_scorers,
@@ -50,8 +51,8 @@ class PartidaService:
                 home_team_name=home_name,
                 away_team_name=away_name,
 
-                home_scorers=partida.gols_home,
-                away_scorers=partida.gols_away,
+                home_scorer=partida.gols_home,
+                away_scorer=partida.gols_away,
                 local_date=partida.data_hora,
                 finished=partida.terminou,
 
@@ -61,14 +62,9 @@ class PartidaService:
 
 
     @staticmethod
-    def atualizar_resultado(id: int, terminou: bool, vencedor_id: int | None) -> None:
-        with Session(engine) as session:
-            repo = PartidaRepository(session)
-            partida = repo.buscar_por_id(id=id)
-
-            if not partida:
-                raise ValueError("Partida não encontrada.")
-            partida.terminou = terminou
+    def atualizar_resultado(partida: Partida, api_partida: ApiPartida, vencedor_id: int | None) -> None:
+            
+            partida.gols_away = api_partida.away_score
+            partida.gols_home = api_partida.home_score
+            partida.terminou = api_partida.finished
             partida.vencedor_id = vencedor_id
-
-            session.commit()
