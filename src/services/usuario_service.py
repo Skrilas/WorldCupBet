@@ -13,7 +13,7 @@ from database import engine
 class UsuarioService:
 
     @staticmethod
-    def validar_senha(senha: str):
+    def _validar_senha(senha: str):
         erros = []
 
         if len(senha) < 8:
@@ -35,7 +35,7 @@ class UsuarioService:
             raise ValueError(f"A senha deve {', '.join(erros)}.")
 
     @staticmethod  
-    def validar_maioridade(data_nascimento: date):
+    def _validar_maioridade(data_nascimento: date):
         data_atual = date.today()
         idade = data_atual.year - data_nascimento.year
 
@@ -46,7 +46,7 @@ class UsuarioService:
             raise ValueError("O usuário deve ser maior de 18 anos.")
 
     @staticmethod
-    def validar_nome(nome: str):
+    def _validar_nome(nome: str):
         if len(nome.strip()) < 3:
             raise ValueError("O nome deve ter pelo menos 3 caracteres.")
 
@@ -62,9 +62,9 @@ class UsuarioService:
             if repo.buscar_por_cpf(usuario_create.cpf):
                 raise ValueError("CPF já cadastrado.")
 
-            cls.validar_nome(usuario_create.nome)
-            cls.validar_maioridade(usuario_create.data_nascimento)
-            cls.validar_senha(usuario_create.senha)
+            cls._validar_nome(usuario_create.nome)
+            cls._validar_maioridade(usuario_create.data_nascimento)
+            cls._validar_senha(usuario_create.senha)
 
             usuario = Usuario(
                 nome=usuario_create.nome,

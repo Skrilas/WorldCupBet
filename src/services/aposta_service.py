@@ -14,7 +14,7 @@ from database import engine
 class ApostaService:
     
     @staticmethod
-    def calcular_odd(session: Session, id_partida: int, time_apostado_id: int) -> Decimal:
+    def _calcular_odd(session: Session, id_partida: int, time_apostado_id: int) -> Decimal:
             repo = ApostasRepository(session)
 
             estatistica = repo.obter_estatisticas_aposta(id_partida)
@@ -68,7 +68,7 @@ class ApostaService:
                 partida_id= id_partida,
                 time_id= id_time,
                 qtd_pontos= pontos_apostados,
-                odd= cls.calcular_odd(session=session, id_partida=id_partida, time_apostado_id=id_time)
+                odd= cls._calcular_odd(session=session, id_partida=id_partida, time_apostado_id=id_time)
             )
 
             aposta_model = Apostas(**aposta.model_dump())
