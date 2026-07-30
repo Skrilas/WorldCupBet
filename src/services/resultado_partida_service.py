@@ -44,6 +44,11 @@ class ResultadoPartidaService:
 
                 continue
 
+            #Caso o usuário perca a aposta
             
             aposta_banco.status = StatusAposta.PERDEU
             aposta_banco.pontos_ganhos = 0
+
+
+            if usuario.pontos == 0 and not aposta_repo.possui_apostas_pendentes(usuario.id):
+                usuario.ativo = False

@@ -2,6 +2,7 @@ from sqlmodel import Session, select
 from sqlalchemy import func
 
 from schemas.estatistica_aposta import EstatisticaAposta
+from enums.status_aposta import StatusAposta
 from models.apostas import Apostas
 
 class ApostasRepository:
@@ -27,6 +28,10 @@ class ApostasRepository:
         if not apostas:
             raise ValueError("Aposta não encontrada.")
         self.session.delete(apostas)
+
+    def possui_apostas_pendentes(self, id_usuario) -> bool:
+        statement = select(Apostas).where(Apostas.usuario_id == id_usuario, Apostas.status == StatusAposta.PENDENTE)
+        return self.session.exec(statement).first() is not None
      
     def obter_estatisticas_aposta(self, id_partida: int) -> list[EstatisticaAposta]: #não retorna a odd, pois a odd é um dado único por usuário
         statement = (
