@@ -23,7 +23,7 @@ class TimeService:
                 repo.salvar(
                     Time(
                         id=api_time.id,
-                        nome=api_time.name_en
+                        nome=api_time.name
                         )
                 )
             session.commit()

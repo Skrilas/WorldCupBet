@@ -2,15 +2,22 @@ from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
 
 class ApiPartida(BaseModel):
-    api_id: int = Field(validation_alias="id")
+    api_id: int
     home_team_id: int
     away_team_id: int
     home_score: int
     away_score: int
-    local_date: datetime
+    utc_date: datetime
     finished: bool
 
-    @field_validator("local_date", mode="before")
     @classmethod
-    def converter_data(cls, value: str) -> datetime:
-        return datetime.strptime(value, "%m/%d/%Y %H:%M")
+    def converter_api(cls, p: dict) -> "ApiPartida":
+        return cls(
+            api_id=p["id"],
+            home_team_id=p["homeTeam"]["id"],
+            away_team_id=p["awayTeam"]["id"],
+            home_score=p["score"]["fullTime"]["home"],
+            away_score=p["score"]["fullTime"]["away"],
+            utc_date=p["utcDate"],
+            finished=p["status"] == "FINISHED"
+        )

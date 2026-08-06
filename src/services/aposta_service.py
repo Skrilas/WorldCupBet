@@ -139,7 +139,7 @@ class ApostaService:
                     away_team_id=partida.away_team_id,
                     home_team_name=home_name,
                     away_team_name=away_name,
-                    local_date=partida.data_hora
+                    utc_date=partida.data_hora
                 )
             for partida, home_name, away_name, _ in apostas_ativas
             ]

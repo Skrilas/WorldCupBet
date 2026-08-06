@@ -7,4 +7,4 @@ class ApostasAtivas(BaseModel):
     away_team_id: int
     home_team_name: str
     away_team_name: str
-    local_date: datetime
+    utc_date: datetime
