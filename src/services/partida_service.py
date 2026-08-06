@@ -12,21 +12,21 @@ class PartidaService:
 
     @staticmethod
     def criar_partidas() -> None:
-        partidas = GerenciadorApiCopa.obter_api_partida_copa("games")
+        partidas = GerenciadorApiCopa.obter_dados_copa("matches")
         with Session(engine) as session:
             repo = PartidaRepository(session)
 
             for p in partidas:
-                api_partida = ApiPartida.model_validate(p)
+                api_partida = ApiPartida.converter_api(p)
 
                 repo.salvar(
                     Partida(
                         api_id=api_partida.api_id,
                         home_team_id=api_partida.home_team_id,
                         away_team_id=api_partida.away_team_id,
-                        gols_home=api_partida.home_scorers,
-                        gols_away=api_partida.away_scorers,
-                        data_hora=api_partida.local_date,
+                        gols_home=api_partida.home_score,
+                        gols_away=api_partida.away_score,
+                        data_hora=api_partida.utc_date,
                         terminou=api_partida.finished
                     )
                 )
@@ -51,9 +51,9 @@ class PartidaService:
                 home_team_name=home_name,
                 away_team_name=away_name,
 
-                home_scorer=partida.gols_home,
-                away_scorer=partida.gols_away,
-                local_date=partida.data_hora,
+                home_score=partida.gols_home,
+                away_score=partida.gols_away,
+                utc_date=partida.data_hora,
                 finished=partida.terminou,
 
                 vencedor_id=partida.vencedor_id,

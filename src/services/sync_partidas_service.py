@@ -11,10 +11,8 @@ class SyncPartidasService:
 
     @staticmethod
     def sincronizar_partidas() -> None:
-        api_partidas = GerenciadorApiCopa.obter_dados_copa("games")
-        partidas_atualizadas = [ApiPartida.model_validate(partida_atualizada)
-                                for partida_atualizada in api_partidas]
-
+        api_partidas = GerenciadorApiCopa.obter_dados_copa("matches")
+        
         with Session(engine) as session:
             repo = PartidaRepository(session)
             partidas_banco = {
@@ -22,7 +20,9 @@ class SyncPartidasService:
                 for partida in repo.listar()
             }
 
-            for partida_atualizada in partidas_atualizadas:
+            for p in api_partidas:
+                partida_atualizada = ApiPartida.converter_api(p)
+
                 partida_banco = partidas_banco.get(partida_atualizada.api_id)
                 if partida_banco is None:
                     continue

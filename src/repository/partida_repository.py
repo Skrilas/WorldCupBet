@@ -47,4 +47,4 @@ class PartidaRepository:
     def buscar_por_id_com_times(self, id: int) -> tuple[Partida, str, str, str | None]| None:
         statement = self.__consulta_com_times()
         
-        return self.session.exec(statement.where(Partida.id == id)).first()
+        return self.session.exec(statement.where(Partida.api_id == id)).first()

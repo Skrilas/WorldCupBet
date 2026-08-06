@@ -1,17 +1,13 @@
 from config.settings import settings
+from urllib.parse import quote
 import requests
 
 class GerenciadorApiCopa:
-    headers = { #simular um navegador pra obter dados da api
-            "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/137.0 Safari/537.36"
-            )}
+    headers = { "X-Auth-Token": settings.api_token}
     @classmethod
     def obter_dados_copa(cls, tipo: str):
         
-        endpoint = f"{settings.api_url}{tipo}" #configura url pra receber o json das partidas
+        endpoint = f"{settings.api_url}{quote(tipo)}" #configura url pra receber o json das partidas
         try:
             response = requests.get(endpoint, headers=cls.headers, timeout=20)
             response.raise_for_status()
