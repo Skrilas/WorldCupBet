@@ -1,1 +1,5 @@
-from fixtures import *
+from fixtures.apostas_fix import *
+from fixtures.partidas_fix import *
+from fixtures.repository_fix import *
+from fixtures.times_fix import *
+from fixtures.usuarios_fix import *
