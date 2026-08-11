@@ -19,7 +19,7 @@ class ApostaService:
 
             estatistica = repo.obter_estatisticas_aposta(id_partida)
             if not estatistica:
-                raise ValueError("Ainda não há apostas nesta partida.")
+                return Decimal("2") #Para incentivar o 1° usuário a apostar
 
             meu_time = 0
             outro_time = 0
@@ -28,8 +28,7 @@ class ApostaService:
                 if time_apostado_id == coluna.time_id:
                     meu_time = coluna.total_apostadores
                 else: outro_time = coluna.total_apostadores
-            if meu_time == 0 and outro_time == 0: #Para incentivar o 1° usuário a apostar
-                return Decimal("2")
+                
             meu_time_calculo = max(meu_time, 1) # Considera o primeiro apostador deste time como base para o cálculo da odd
             odd = Decimal("1") + (Decimal(outro_time) / Decimal(meu_time_calculo))
             return odd
