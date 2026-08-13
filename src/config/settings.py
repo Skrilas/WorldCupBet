@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     historico_api_url: str = Field(alias="HISTORICO_API_URL")
     historico_api_key: str = Field(alias="HISTORICO_API_KEY")
 
+    test_database_url: str = Field(alias="TEST_DATABASE_URL")
+
     model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings()
