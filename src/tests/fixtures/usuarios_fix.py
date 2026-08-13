@@ -31,9 +31,21 @@ def admin():
 
 @pytest.fixture
 def usuario():
-    return criar_usuario(
-        id=2
-    )
+    contador = 0
+
+    def _usuario(palpites_corretos=0, pontos=Decimal("100")):
+        nonlocal contador
+        contador += 1
+
+        return criar_usuario(
+            nome = f"usuario{contador}",
+            email = f"usuario{contador}@teste.com",
+            cpf = f"123456789{contador:02d}",
+            login= f"usuario{contador}",
+            palpites_corretos=palpites_corretos,
+            pontos=pontos
+        )
+    return _usuario
 
 @pytest.fixture
 def usuario_menor_idade():
