@@ -1,9 +1,9 @@
 from sqlmodel import Session
 
-from repository.usuario_repository import UsuarioRepository
-from schemas.usuario_read import UsuarioRead
-from models.usuario import Usuario
-from database import engine
+from src.repository.usuario_repository import UsuarioRepository
+from src.schemas.usuario_read import UsuarioRead
+from src.models.usuario import Usuario
+from src.database import engine
 
 class UsuarioAdminService:
 

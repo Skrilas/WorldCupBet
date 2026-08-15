@@ -1,7 +1,7 @@
 from urllib.parse import quote
 import requests
 
-from config.settings import settings
+from src.config.settings import settings
 
 class GerenciadoApiHistorico:
     

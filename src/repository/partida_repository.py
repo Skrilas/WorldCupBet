@@ -2,8 +2,8 @@ from sqlmodel import Session, select
 from sqlalchemy.orm import aliased
 from datetime import datetime, UTC
 
-from models.partida import Partida
-from models.time import Time
+from src.models.partida import Partida
+from src.models.time import Time
 
 class PartidaRepository:
     def __init__(self, session: Session):

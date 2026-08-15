@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 
-from models.time import Time
+from src.models.time import Time
 
 class TimeRepository:
     def __init__(self, session: Session):

@@ -3,12 +3,12 @@ from decimal import Decimal
 from datetime import date
 import re
 
-from repository.usuario_repository import UsuarioRepository
-from schemas.ranking_usuario import RankingUsuario
-from schemas.usuario_create import UsuarioCreate
-from config.hash import password_hasher
-from models.usuario import Usuario
-from database import engine
+from src.repository.usuario_repository import UsuarioRepository
+from src.schemas.ranking_usuario import RankingUsuario
+from src.schemas.usuario_create import UsuarioCreate
+from src.config.hash import password_hasher
+from src.models.usuario import Usuario
+from src.database import engine
 
 class UsuarioService:
 

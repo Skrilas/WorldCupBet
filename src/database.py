@@ -1,5 +1,5 @@
 from sqlmodel import create_engine, Session
-from config.settings import settings
+from src.config.settings import settings
 
 #conexão com o banco de dados
 

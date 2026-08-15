@@ -2,14 +2,14 @@ from sqlmodel import Session
 from decimal import Decimal
 from datetime import datetime, UTC
 
-from repository.apostas_repository import ApostasRepository
-from repository.partida_repository import PartidaRepository
-from repository.usuario_repository import UsuarioRepository
-from schemas.apostas_create import ApostasCreate
-from schemas.apostas_ativas import ApostasAtivas
-from schemas.apostas_read import ApostasRead
-from models.apostas import Apostas
-from database import engine
+from src.repository.apostas_repository import ApostasRepository
+from src.repository.partida_repository import PartidaRepository
+from src.repository.usuario_repository import UsuarioRepository
+from src.schemas.apostas_create import ApostasCreate
+from src.schemas.apostas_ativas import ApostasAtivas
+from src.schemas.apostas_read import ApostasRead
+from src.models.apostas import Apostas
+from src.database import engine
 
 class ApostaService:
     

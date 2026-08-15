@@ -1,9 +1,9 @@
 from sqlmodel import Session
 
-from repository.usuario_repository import UsuarioRepository
-from repository.apostas_repository import ApostasRepository
-from enums.status_aposta import StatusAposta
-from models.partida import Partida
+from src.repository.usuario_repository import UsuarioRepository
+from src.repository.apostas_repository import ApostasRepository
+from src.enums.status_aposta import StatusAposta
+from src.models.partida import Partida
 
 class ResultadoPartidaService:
     """Processa o resultado de uma partida encerrada.

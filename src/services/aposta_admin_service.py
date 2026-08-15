@@ -1,13 +1,13 @@
 from sqlmodel import Session
 
-from repository.partida_repository import PartidaRepository
-from repository.apostas_repository import ApostasRepository
-from repository.time_repository import TimeRepository
-from schemas.overview_apostas import OverviewApostas
-from schemas.times_da_partida import TimesDaPartida
-from services.login_service import LoginService
-from models.usuario import Usuario
-from database import engine
+from src.repository.partida_repository import PartidaRepository
+from src.repository.apostas_repository import ApostasRepository
+from src.repository.time_repository import TimeRepository
+from src.schemas.overview_apostas import OverviewApostas
+from src.schemas.times_da_partida import TimesDaPartida
+from src.services.login_service import LoginService
+from src.models.usuario import Usuario
+from src.database import engine
 
 class ApostasAdminService:
     

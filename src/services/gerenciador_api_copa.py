@@ -1,6 +1,7 @@
-from config.settings import settings
 from urllib.parse import quote
 import requests
+
+from src.config.settings import settings
 
 class GerenciadorApiCopa:
     headers = { "X-Auth-Token": settings.api_token}

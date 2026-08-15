@@ -1,11 +1,11 @@
 from sqlmodel import Session
 
-from repository.partida_repository import PartidaRepository
-from services.gerenciador_api_copa import GerenciadorApiCopa
-from schemas.partida_read import PartidaRead
-from schemas.api_partida import ApiPartida
-from models.partida import Partida
-from database import engine
+from src.repository.partida_repository import PartidaRepository
+from src.services.gerenciador_api_copa import GerenciadorApiCopa
+from src.schemas.partida_read import PartidaRead
+from src.schemas.api_partida import ApiPartida
+from src.models.partida import Partida
+from src.database import engine
 
 
 class PartidaService:

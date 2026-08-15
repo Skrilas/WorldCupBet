@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from decimal import Decimal
 
-from enums.status_aposta import StatusAposta
+from src.enums.status_aposta import StatusAposta
 
 class ApostasRead(BaseModel):
     id: int

@@ -1,11 +1,11 @@
-from database import engine
+from src.database import engine
 from sqlmodel import Session
 
-from services.gerenciador_api_copa import GerenciadorApiCopa
-from repository.partida_repository import PartidaRepository
-from services.resultado_partida_service import ResultadoPartidaService
-from services.partida_service import PartidaService
-from schemas.api_partida import ApiPartida
+from src.services.gerenciador_api_copa import GerenciadorApiCopa
+from src.repository.partida_repository import PartidaRepository
+from src.services.resultado_partida_service import ResultadoPartidaService
+from src.services.partida_service import PartidaService
+from src.schemas.api_partida import ApiPartida
 
 class SyncPartidasService:
 

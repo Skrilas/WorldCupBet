@@ -1,10 +1,10 @@
 from argon2.exceptions import VerifyMismatchError 
 from sqlmodel import Session
 
-from repository.usuario_repository import UsuarioRepository
-from config.hash import password_hasher
-from models.usuario import Usuario
-from database import engine
+from src.repository.usuario_repository import UsuarioRepository
+from src.config.hash import password_hasher
+from src.models.usuario import Usuario
+from src.database import engine
 
 class LoginService:
     

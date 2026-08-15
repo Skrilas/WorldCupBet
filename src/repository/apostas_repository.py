@@ -1,9 +1,9 @@
 from sqlmodel import Session, select
 from sqlalchemy import func
 
-from schemas.estatistica_aposta import EstatisticaAposta
-from enums.status_aposta import StatusAposta
-from models.apostas import Apostas
+from src.schemas.estatistica_aposta import EstatisticaAposta
+from src.enums.status_aposta import StatusAposta
+from src.models.apostas import Apostas
 
 class ApostasRepository:
     def __init__(self, session: Session):

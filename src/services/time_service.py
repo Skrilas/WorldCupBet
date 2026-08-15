@@ -1,12 +1,12 @@
 from sqlmodel import Session
-from database import engine
+from src.database import engine
 
-from services.gerenciador_api_historico import GerenciadoApiHistorico
-from services.gerenciador_api_copa import GerenciadorApiCopa
-from repository.time_repository import TimeRepository
-from schemas.historico_copa import HistoricoCopa
-from schemas.api_time import ApiTime
-from models.time import Time
+from src.services.gerenciador_api_historico import GerenciadoApiHistorico
+from src.services.gerenciador_api_copa import GerenciadorApiCopa
+from src.repository.time_repository import TimeRepository
+from src.schemas.historico_copa import HistoricoCopa
+from src.schemas.api_time import ApiTime
+from src.models.time import Time
 
 class TimeService:
     

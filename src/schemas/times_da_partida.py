@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from models.time import Time
+from src.models.time import Time
 
 @dataclass(frozen=True)
 class TimesDaPartida:
