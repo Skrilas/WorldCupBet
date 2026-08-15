@@ -89,13 +89,13 @@ class UsuarioService:
             if not usuario:
                 raise ValueError("Usuário não encontrado.")
             
-            cls.validar_senha(senha)
+            cls._validar_senha(senha)
             usuario.senha_hash = password_hasher.hash(senha)
             session.commit()
 
     @classmethod
     def consultar_pontos(cls, id_usuario: int) -> Decimal:
-        usuario = cls.busca_usuario(id_usuario)
+        usuario = cls.buscar_usuario(id_usuario)
 
         return usuario.pontos
 
