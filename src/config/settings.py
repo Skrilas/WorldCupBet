@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     api_token: str = Field(alias="API_TOKEN")
     historico_api_url: str = Field(alias="HISTORICO_API_URL")
     historico_api_key: str = Field(alias="HISTORICO_API_KEY")
+    secret_key: str = Field(alias="SECRET_KEY")
 
     test_database_url: str = Field(alias="TEST_DATABASE_URL")
 
