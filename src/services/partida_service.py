@@ -33,6 +33,13 @@ class PartidaService:
             session.commit()
 
     @staticmethod
+    def listar_partidas() -> list[Partida]:
+        with Session(engine) as session:
+            repo = PartidaRepository(session)
+
+            return repo.listar()
+
+    @staticmethod
     def mostrar_partida(id: int) -> PartidaRead:
         with Session(engine) as session:
             repo = PartidaRepository(session)

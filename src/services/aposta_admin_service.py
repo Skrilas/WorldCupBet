@@ -5,15 +5,12 @@ from src.repository.apostas_repository import ApostasRepository
 from src.repository.time_repository import TimeRepository
 from src.schemas.overview_apostas import OverviewApostas
 from src.schemas.times_da_partida import TimesDaPartida
-from src.services.login_service import LoginService
-from src.models.usuario import Usuario
 from src.database import engine
 
 class ApostasAdminService:
     
     @staticmethod
-    def liberar_aposta(id_partida: int, usuario: Usuario) -> None:
-        LoginService.verificar_admin(usuario)
+    def liberar_aposta(id_partida: int) -> None:
         with Session(engine) as session:
             repo = PartidaRepository(session)
             partida = repo.buscar_por_id(id_partida)
@@ -41,12 +38,12 @@ class ApostasAdminService:
             
         
     @classmethod
-    def overview_apostas_da_partida(cls, id_partida: int) -> OverviewApostas: #FAZER TESTES DE FUNCIONAMENTO!!!!
+    def overview_apostas_da_partida(cls, id_partida: int) -> OverviewApostas:
         times = cls.buscar_times_da_partida(id_partida)
         
         with Session(engine) as session:
             repo = ApostasRepository(session)
-            dados = repo.buscar_por_id_partida(id_partida) #Retorna uma lista pra cada time
+            dados = repo.obter_estatisticas_aposta(id_partida) #Retorna uma lista pra cada time
             
             if not dados:
                 raise ValueError("Ainda não há apostas nesta partida.")
