@@ -17,12 +17,6 @@ class PartidaRepository:
     
     def listar(self) -> list[Partida]:
         return self.session.exec(select(Partida)).all()
-
-    def excluir(self, id: int):
-        partida = self.buscar_por_id(id=id)
-        if not partida:
-            raise ValueError("Partida não encontrada.")
-        self.session.delete(partida)
     
     def __consulta_com_times(self):
         home = aliased(Time)
@@ -44,7 +38,7 @@ class PartidaRepository:
         return self.session.exec(statement.where(Partida.aposta_ativa, Partida.data_hora > datetime.now(UTC))).all()
 
 
-    def buscar_por_id_com_times(self, id: int) -> tuple[Partida, str, str, str | None]| None:
+    def buscar_por_api_id_com_times(self, api_id: int) -> tuple[Partida, str, str, str | None]| None:
         statement = self.__consulta_com_times()
         
-        return self.session.exec(statement.where(Partida.api_id == id)).first()
+        return self.session.exec(statement.where(Partida.api_id == api_id)).first()
