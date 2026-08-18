@@ -2,6 +2,7 @@ from sqlmodel import Session
 from decimal import Decimal
 from datetime import datetime, UTC
 
+from src.exceptions.business import BusinessRuleError, NotFoundError
 from src.repository.apostas_repository import ApostasRepository
 from src.repository.partida_repository import PartidaRepository
 from src.repository.usuario_repository import UsuarioRepository
@@ -42,23 +43,23 @@ class ApostaService:
 
             partida = partida_repo.buscar_por_id(id_partida)
             if not partida:
-                raise ValueError("Partida não encontrada.")
+                raise NotFoundError("Partida não encontrada.")
 
             if not partida.aposta_ativa:
-                raise ValueError("Não é possível apostar neste jogo.")
+                raise BusinessRuleError("Não é possível apostar neste jogo.")
             
             if partida.data_hora <= datetime.now(UTC):
-                raise ValueError("Não é possível apostar após o inicio do jogo.")
+                raise BusinessRuleError("Não é possível apostar após o inicio do jogo.")
 
             if id_time not in (partida.home_team_id, partida.away_team_id):
-                raise ValueError("Time inválido para esta partida.")
+                raise BusinessRuleError("Time inválido para esta partida.")
 
             usuario = usuario_repo.buscar_por_id_atualizar(id_usuario)
             if not usuario:
-                raise ValueError("Usuário não encontrado.")
+                raise NotFoundError("Usuário não encontrado.")
             
             if usuario.pontos < pontos_apostados:
-                raise ValueError("Usuário não possui pontos suficientes.")
+                raise BusinessRuleError("Usuário não possui pontos suficientes.")
             
             usuario.pontos -= pontos_apostados
 
@@ -84,7 +85,7 @@ class ApostaService:
             repo = ApostasRepository(session)
             aposta = repo.buscar_por_id_partida(id_partida=id_partida, id_usuario=id_usuario)
             if not aposta:
-                raise ValueError("Usuário não fez uma aposta nesta partida")
+                raise NotFoundError("Usuário não fez uma aposta nesta partida")
             return ApostasRead(
                 id=aposta.id,
                 usuario_id=aposta.usuario_id,
@@ -106,19 +107,19 @@ class ApostaService:
 
             aposta_usuario = aposta_repo.buscar_por_id_partida(id_partida=id_partida, id_usuario=id_usuario)
             if not aposta_usuario:
-                raise ValueError("Usuário não apostou nesta partida.")
+                raise NotFoundError("Usuário não apostou nesta partida.")
             
             usuario = usuario_repo.buscar_por_id_atualizar(id_usuario)
             if not usuario:
-                raise ValueError("Usuário não encontrado.")
+                raise NotFoundError("Usuário não encontrado.")
             
-            if multiplicador <= 1:
-                raise ValueError("O multiplicador deve ser maior que 1.")
+            if multiplicador < 2 or multiplicador > 5:
+                raise BusinessRuleError("O multiplicador deve estar entre 2 e 5.")
             
             pontos_multiplicados = aposta_usuario.qtd_pontos * multiplicador
             pontos_faltantes = pontos_multiplicados - aposta_usuario.qtd_pontos
             if usuario.pontos < pontos_faltantes:
-                raise ValueError("Usuário não possui pontos suficientes.")
+                raise BusinessRuleError("Usuário não possui pontos suficientes.")
             
             usuario.pontos -= pontos_faltantes
             aposta_usuario.qtd_pontos = pontos_multiplicados

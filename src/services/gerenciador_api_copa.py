@@ -1,6 +1,7 @@
 from urllib.parse import quote
 import requests
 
+from src.exceptions.business import ExternalApiError
 from src.config.settings import settings
 
 class GerenciadorApiCopa:
@@ -13,9 +14,9 @@ class GerenciadorApiCopa:
             response = requests.get(endpoint, headers=cls.headers, timeout=20)
             response.raise_for_status()
         except requests.RequestException as e:
-            raise ConnectionError(f"Erro ao acessar a API: {e}") from e
+            raise ExternalApiError(f"Erro ao acessar a API: {e}") from e
         
         dados = response.json()
         if tipo not in dados:
-            raise Exception(f"A resposta da API não contém a chave '{tipo}'")
+            raise ExternalApiError(f"A resposta da API não contém a chave '{tipo}'")
         return dados[tipo]

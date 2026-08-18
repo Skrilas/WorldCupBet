@@ -1,6 +1,7 @@
 from sqlmodel import Session
 
 from src.repository.usuario_repository import UsuarioRepository
+from src.exceptions.business import NotFoundError
 from src.schemas.usuario_read import UsuarioRead
 from src.models.usuario import Usuario
 from src.database import engine
@@ -39,6 +40,6 @@ class UsuarioAdminService:
 
             usuario = repo.buscar_por_cpf(cpf)
             if not usuario:
-                raise ValueError("Usuário não encontrado.")
+                raise NotFoundError("Usuário não encontrado.")
             
             return cls._usuario_para_read(usuario)

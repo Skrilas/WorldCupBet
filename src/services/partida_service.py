@@ -2,6 +2,7 @@ from sqlmodel import Session
 
 from src.repository.partida_repository import PartidaRepository
 from src.services.gerenciador_api_copa import GerenciadorApiCopa
+from src.exceptions.business import NotFoundError
 from src.schemas.partida_read import PartidaRead
 from src.schemas.api_partida import ApiPartida
 from src.models.partida import Partida
@@ -46,7 +47,7 @@ class PartidaService:
             resultado = repo.buscar_por_id_com_times(id)
             
             if resultado is None:
-                raise ValueError("Partida não encontrada.")
+                raise NotFoundError("Partida não encontrada.")
             
             partida, home_name, away_name, vencedor_name = resultado
             

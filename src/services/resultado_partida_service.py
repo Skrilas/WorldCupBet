@@ -1,5 +1,6 @@
 from sqlmodel import Session
 
+from src.exceptions.business import NotFoundError, BusinessRuleError
 from src.repository.usuario_repository import UsuarioRepository
 from src.repository.apostas_repository import ApostasRepository
 from src.enums.status_aposta import StatusAposta
@@ -15,7 +16,7 @@ class ResultadoPartidaService:
         aposta_repo = ApostasRepository(session)
 
         if not partida.terminou:
-            raise ValueError("Não é possível processar uma partida que ainda não terminou.")
+            raise BusinessRuleError("Não é possível processar uma partida que ainda não terminou.")
 
         apostas_banco = aposta_repo.listar_por_id_partida(partida.id)
 
@@ -23,7 +24,7 @@ class ResultadoPartidaService:
 
             usuario = usu_repo.buscar_por_id(aposta_banco.usuario_id)
             if not usuario:
-                raise ValueError(f"Usuário {aposta_banco.usuario_id} não encontrado.")
+                raise NotFoundError(f"Usuário {aposta_banco.usuario_id} não encontrado.")
 
             if partida.vencedor_id is None:
                 ganho = aposta_banco.qtd_pontos

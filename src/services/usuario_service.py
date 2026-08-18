@@ -3,6 +3,7 @@ from decimal import Decimal
 from datetime import date
 import re
 
+from src.exceptions.business import ConflictError, BusinessRuleError, NotFoundError
 from src.repository.usuario_repository import UsuarioRepository
 from src.schemas.ranking_usuario import RankingUsuario
 from src.schemas.usuario_create import UsuarioCreate
@@ -32,7 +33,7 @@ class UsuarioService:
             erros.append("conter um caractere especial")
 
         if erros:
-            raise ValueError(f"A senha deve {', '.join(erros)}.")
+            raise BusinessRuleError(f"A senha deve {', '.join(erros)}.")
 
     @staticmethod  
     def _validar_maioridade(data_nascimento: date):
@@ -43,12 +44,12 @@ class UsuarioService:
             idade -= 1
         
         if idade < 18:
-            raise ValueError("O usuário deve ser maior de 18 anos.")
+            raise BusinessRuleError("O usuário deve ser maior de 18 anos.")
 
     @staticmethod
     def _validar_nome(nome: str):
         if len(nome.strip()) < 3:
-            raise ValueError("O nome deve ter pelo menos 3 caracteres.")
+            raise BusinessRuleError("O nome deve ter pelo menos 3 caracteres.")
 
 
     @classmethod
@@ -57,10 +58,13 @@ class UsuarioService:
             repo = UsuarioRepository(session)
 
             if repo.buscar_por_email(usuario_create.email):
-                raise ValueError("E-mail já cadastrado.")
+                raise ConflictError("E-mail já cadastrado.")
             
             if repo.buscar_por_cpf(usuario_create.cpf):
-                raise ValueError("CPF já cadastrado.")
+                raise ConflictError("CPF já cadastrado.")
+
+            if repo.buscar_por_login(usuario_create.login):
+                raise ConflictError("Login já cadastrado.")
 
             cls._validar_nome(usuario_create.nome)
             cls._validar_maioridade(usuario_create.data_nascimento)
@@ -87,7 +91,7 @@ class UsuarioService:
             
             usuario = repo.buscar_por_id(id_usuario)
             if not usuario:
-                raise ValueError("Usuário não encontrado.")
+                raise NotFoundError("Usuário não encontrado.")
             
             cls._validar_senha(senha)
             usuario.senha_hash = password_hasher.hash(senha)
@@ -118,7 +122,7 @@ class UsuarioService:
             repo = UsuarioRepository(session)
             usuario = repo.buscar_por_id(id)
             if not usuario:
-                raise ValueError("Usuário não encontrado.")
+                raise NotFoundError("Usuário não encontrado.")
             return usuario
         
     @staticmethod
@@ -128,9 +132,9 @@ class UsuarioService:
 
             usuario = repo.buscar_por_id(id_usuario)
             if not usuario:
-                raise ValueError("Usuário não encontrado.")
+                raise NotFoundError("Usuário não encontrado.")
             if not usuario.ativo:
-                raise ValueError("Usuário já está inativo")
+                raise ConflictError("Usuário já está inativo")
             
             usuario.ativo = False
             session.commit()

@@ -1,5 +1,6 @@
 from sqlmodel import Session
-
+from decimal import Decimal
+from src.exceptions.business import BusinessRuleError, NotFoundError
 from src.repository.partida_repository import PartidaRepository
 from src.repository.apostas_repository import ApostasRepository
 from src.repository.time_repository import TimeRepository
@@ -16,7 +17,7 @@ class ApostasAdminService:
             partida = repo.buscar_por_id(id_partida)
             
             if not partida:
-                raise ValueError("Partida não encontrada.")
+                raise NotFoundError("Partida não encontrada.")
             partida.aposta_ativa = True
             
             session.commit()
@@ -29,7 +30,7 @@ class ApostasAdminService:
             
             partida = partida_repo.buscar_por_id(id_partida)
             if not partida:
-                raise ValueError("Partida não encontrada.")
+                raise NotFoundError("Partida não encontrada.")
             
             return TimesDaPartida(
                 away_team = time_repo.buscar_por_id(partida.away_team_id),
@@ -46,13 +47,13 @@ class ApostasAdminService:
             dados = repo.obter_estatisticas_aposta(id_partida) #Retorna uma lista pra cada time
             
             if not dados:
-                raise ValueError("Ainda não há apostas nesta partida.")
+                raise BusinessRuleError("Ainda não há apostas nesta partida.")
             
             #inicializar variáveis pra evitar erro por falta de aposta em um time
             total_apostadores_home = 0
-            total_pontos_home = 0
+            total_pontos_home = Decimal("0")
             total_apostadores_away = 0
-            total_pontos_away = 0
+            total_pontos_away = Decimal("0")
             
             for time in dados: #Nomeia cada dado de acordo com o shcema de OverviewApostas
                 if time.time_id == times.away_team.id:

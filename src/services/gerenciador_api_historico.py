@@ -1,6 +1,7 @@
 from urllib.parse import quote
 import requests
 
+from src.exceptions.business import ExternalApiError
 from src.config.settings import settings
 
 class GerenciadoApiHistorico:
@@ -16,7 +17,7 @@ class GerenciadoApiHistorico:
             response = requests.get(endpoint, headers=headers, timeout=20)
             response.raise_for_status()
         except requests.RequestException as e:
-            raise ConnectionError(f"Erro ao acessar a API: {e}") from e
+            raise ExternalApiError(f"Erro ao acessar a API: {e}") from e
         
         historico = response.json()
         return historico

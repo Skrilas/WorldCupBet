@@ -2,6 +2,7 @@ from sqlmodel import Session
 from src.database import engine
 
 from src.services.gerenciador_api_historico import GerenciadoApiHistorico
+from src.exceptions.business import BusinessRuleError, NotFoundError
 from src.services.gerenciador_api_copa import GerenciadorApiCopa
 from src.repository.time_repository import TimeRepository
 from src.schemas.historico_copa import HistoricoCopa
@@ -35,7 +36,7 @@ class TimeService:
 
             time = repo.buscar_por_id(id)
             if not time:
-                raise ValueError("Time não encontrado.")
+                raise NotFoundError("Time não encontrado.")
             return time
         
     @staticmethod
@@ -51,7 +52,7 @@ class TimeService:
 
         historico_copas = GerenciadoApiHistorico.obter_historico_copas_time(time.nome)
         if not historico_copas["appearances"]:
-            raise ValueError("O time não possui participações registradas em Copas do Mundo.")
+            raise BusinessRuleError("O time não possui participações registradas em Copas do Mundo.")
         
         return TimeService._preencher_historico_copa(historico_copas["appearances"])
     
