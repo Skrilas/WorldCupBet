@@ -48,7 +48,7 @@ class PartidaService:
         """Retorna os dados de uma partida, incluindo os nomes dos times e do vencedor."""
         with Session(engine) as session:
             repo = PartidaRepository(session)
-            resultado = repo.buscar_por_id_com_times(id)
+            resultado = repo.buscar_por_api_id_com_times(id)
             
             if resultado is None:
                 raise NotFoundError("Partida não encontrada.")
