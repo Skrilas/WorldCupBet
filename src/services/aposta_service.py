@@ -16,6 +16,7 @@ class ApostaService:
     
     @staticmethod
     def _calcular_odd(session: Session, id_partida: int, time_apostado_id: int) -> Decimal:
+            """Calcula a odd da aposta com base na quantidade de apostadores de cada time."""
             repo = ApostasRepository(session)
 
             estatistica = repo.obter_estatisticas_aposta(id_partida)
@@ -36,6 +37,7 @@ class ApostaService:
 
     @classmethod
     def apostar(cls, id_usuario: int, id_partida: int, id_time: int, pontos_apostados: Decimal) -> None:
+        """Cria uma aposta após validar a partida, o time escolhido e o saldo do usuário."""
         with Session(engine) as session:
             partida_repo = PartidaRepository(session)
             aposta_repo = ApostasRepository(session)
@@ -80,7 +82,8 @@ class ApostaService:
 
         
     @staticmethod
-    def mostrar_status_aposta(id_usuario: int, id_partida: int) -> ApostasRead: #Recebe o id de Partida para busca
+    def mostrar_status_aposta(id_usuario: int, id_partida: int) -> ApostasRead:
+        """Retorna o status da aposta do usuário em uma determinada partida."""
         with Session(engine) as session:
             repo = ApostasRepository(session)
             aposta = repo.buscar_por_id_partida(id_partida=id_partida, id_usuario=id_usuario)
@@ -101,6 +104,7 @@ class ApostaService:
 
     @staticmethod
     def multiplicar_aposta(id_usuario: int, id_partida: int, multiplicador: int) -> None:
+        """Multiplica uma aposta existente, respeitando o limite do multiplicador e o saldo do usuário."""
         with Session(engine) as session:
             aposta_repo = ApostasRepository(session)
             usuario_repo = UsuarioRepository(session)
@@ -128,6 +132,7 @@ class ApostaService:
     
     @staticmethod
     def mostrar_apostas_ativas() -> list[ApostasAtivas]:
+        """Retorna as partidas atualmente disponíveis para apostas."""
         with Session(engine) as session:
             repo = PartidaRepository(session)
             apostas_ativas = repo.mostrar_partidas_ativas()
@@ -147,6 +152,7 @@ class ApostaService:
 
     @staticmethod
     def mostrar_apostas_usuario(id_usuario: int) -> list[ApostasRead]:
+        """Retorna todas as apostas realizadas pelo usuário informado."""
         with Session(engine) as session:
             repo = ApostasRepository(session)
 

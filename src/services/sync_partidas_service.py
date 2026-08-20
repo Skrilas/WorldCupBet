@@ -11,6 +11,7 @@ class SyncPartidasService:
 
     @staticmethod
     def sincronizar_partidas() -> None:
+        """Sincroniza os resultados das partidas com a API externa e processa as apostas encerradas."""
         api_partidas = GerenciadorApiCopa.obter_dados_copa("matches")
         
         with Session(engine) as session:

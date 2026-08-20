@@ -12,7 +12,9 @@ from src.database import engine
 class PartidaService:
 
     @staticmethod
+    #USO ÚNICO PARA O PREENCHIMENTO DO BANCO!
     def criar_partidas() -> None:
+        """Obtém as partidas da API externa e as cadastra no banco de dados."""
         partidas = GerenciadorApiCopa.obter_dados_copa("matches")
         with Session(engine) as session:
             repo = PartidaRepository(session)
@@ -35,6 +37,7 @@ class PartidaService:
 
     @staticmethod
     def listar_partidas() -> list[Partida]:
+        """Retorna todas as partidas cadastradas no banco de dados."""
         with Session(engine) as session:
             repo = PartidaRepository(session)
 
@@ -42,6 +45,7 @@ class PartidaService:
 
     @staticmethod
     def mostrar_partida(id: int) -> PartidaRead:
+        """Retorna os dados de uma partida, incluindo os nomes dos times e do vencedor."""
         with Session(engine) as session:
             repo = PartidaRepository(session)
             resultado = repo.buscar_por_id_com_times(id)
@@ -71,6 +75,7 @@ class PartidaService:
 
     @staticmethod
     def atualizar_resultado(partida: Partida, api_partida: ApiPartida, vencedor_id: int | None) -> None:
+            """Atualiza o resultado de uma partida com os dados obtidos da API externa."""
             
             partida.gols_away = api_partida.away_score
             partida.gols_home = api_partida.home_score

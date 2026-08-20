@@ -8,10 +8,11 @@ class GerenciadoApiHistorico:
     
     @staticmethod
     def obter_historico_copas_time(time: str):
+        """Consulta o histórico de participações de um time em Copas do Mundo."""
         headers = {
             "X-API-Key": settings.historico_api_key
         }
-        endpoint = f"{settings.historico_api_url}{quote(time)}" #configura url pra receber o json das partidas
+        endpoint = f"{settings.historico_api_url}{quote(time)}" #configura url pra receber o json de um dado da API
 
         try:
             response = requests.get(endpoint, headers=headers, timeout=20)

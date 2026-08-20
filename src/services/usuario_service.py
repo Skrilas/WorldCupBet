@@ -15,6 +15,7 @@ class UsuarioService:
 
     @staticmethod
     def _validar_senha(senha: str):
+        """Valida se a senha atende aos requisitos mínimos de segurança."""
         erros = []
 
         if len(senha) < 8:
@@ -37,6 +38,7 @@ class UsuarioService:
 
     @staticmethod  
     def _validar_maioridade(data_nascimento: date):
+        """Verifica se o usuário possui pelo menos 18 anos."""
         data_atual = date.today()
         idade = data_atual.year - data_nascimento.year
 
@@ -48,12 +50,14 @@ class UsuarioService:
 
     @staticmethod
     def _validar_nome(nome: str):
+        """Valida se o nome possui a quantidade mínima de caracteres."""
         if len(nome.strip()) < 3:
             raise BusinessRuleError("O nome deve ter pelo menos 3 caracteres.")
 
 
     @classmethod
     def cadastrar_usuario(cls, usuario_create: UsuarioCreate) -> Usuario:
+        """Valida e cadastra um novo usuário no sistema."""
         with Session(engine) as session:
             repo = UsuarioRepository(session)
 
@@ -86,6 +90,7 @@ class UsuarioService:
     
     @classmethod
     def alterar_senha(cls, id_usuario: int, senha: str) -> None:
+        """Valida e altera a senha de um usuário."""
         with Session(engine) as session:
             repo = UsuarioRepository(session)
             
@@ -99,12 +104,14 @@ class UsuarioService:
 
     @classmethod
     def consultar_pontos(cls, id_usuario: int) -> Decimal:
+        """Retorna o saldo de pontos de um usuário."""
         usuario = cls.buscar_usuario(id_usuario)
 
         return usuario.pontos
 
     @staticmethod
     def mostrar_ranking() -> list[RankingUsuario]:
+        """Retorna o ranking dos usuários ordenado pelos palpites corretos."""
         with Session(engine) as session:
             repo = UsuarioRepository(session)
             usuarios = repo.listar_por_palpites()
@@ -118,6 +125,7 @@ class UsuarioService:
 
     @staticmethod
     def buscar_usuario(id: int) -> Usuario:
+        """Busca um usuário pelo ID."""
         with Session(engine) as session:
             repo = UsuarioRepository(session)
             usuario = repo.buscar_por_id(id)
@@ -127,6 +135,7 @@ class UsuarioService:
         
     @staticmethod
     def cancelar_participacao_no_sistema(id_usuario: int) -> None:
+        """Inativa a conta do usuário, mantendo seus dados no sistema."""
         with Session(engine) as session:
             repo = UsuarioRepository(session)
 

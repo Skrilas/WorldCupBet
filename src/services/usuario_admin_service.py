@@ -11,6 +11,7 @@ class UsuarioAdminService:
 
     @staticmethod
     def _usuario_para_read(usuario: Usuario) -> UsuarioRead:
+        """Converte um usuário do modelo do banco para o schema de resposta."""
         return UsuarioRead(
             id=usuario.id,
             nome=usuario.nome,
@@ -24,6 +25,7 @@ class UsuarioAdminService:
 
     @classmethod
     def listar_usuarios(cls) ->list[UsuarioRead]:
+        """Retorna todos os usuários cadastrados no sistema."""
         with Session(engine) as session:
             repo = UsuarioRepository(session)
 
@@ -35,6 +37,7 @@ class UsuarioAdminService:
 
     @classmethod
     def buscar_usuario_por_cpf(cls, cpf: str) -> UsuarioRead:
+         """Busca um usuário pelo CPF e retorna seus dados."""
          with Session(engine) as session:
             repo = UsuarioRepository(session)
 

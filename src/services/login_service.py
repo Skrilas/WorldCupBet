@@ -11,6 +11,7 @@ class LoginService:
     
     @staticmethod
     def autenticar(login: str, senha: str) -> Usuario:
+        """Autentica o usuário verificando suas credenciais e se a conta está ativa."""
         with Session(engine) as session:
             repo = UsuarioRepository(session)
 
@@ -30,5 +31,6 @@ class LoginService:
     
     @staticmethod
     def verificar_admin(usuario: Usuario) -> None:
+        """Verifica se o usuário possui permissão de administrador."""
         if not usuario.admin:
             raise AuthorizationError("Apenas administradores podem acessar esta funcionalidade.")

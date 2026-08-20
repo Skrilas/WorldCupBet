@@ -12,6 +12,7 @@ class ApostasAdminService:
     
     @staticmethod
     def liberar_aposta(id_partida: int) -> None:
+        """Libera uma partida para que os usuários possam realizar apostas."""
         with Session(engine) as session:
             repo = PartidaRepository(session)
             partida = repo.buscar_por_id(id_partida)
@@ -24,6 +25,7 @@ class ApostasAdminService:
     
     @staticmethod
     def buscar_times_da_partida(id_partida: int) -> TimesDaPartida:
+        """Retorna os dois times associados a uma partida."""
         with Session(engine) as session:
             partida_repo = PartidaRepository(session)
             time_repo = TimeRepository(session)
@@ -40,6 +42,7 @@ class ApostasAdminService:
         
     @classmethod
     def overview_apostas_da_partida(cls, id_partida: int) -> OverviewApostas:
+        """Retorna um resumo das apostas realizadas em uma partida, agrupado por time."""
         times = cls.buscar_times_da_partida(id_partida)
         
         with Session(engine) as session:
@@ -63,7 +66,7 @@ class ApostasAdminService:
                     total_apostadores_home = time.total_apostadores
                     total_pontos_home = time.total_pontos
                 else:
-                    raise ValueError(f"Foi encontrada uma aposta para um time inválido na partida {id_partida}.")
+                    raise BusinessRuleError(f"Foi encontrada uma aposta para um time inválido na partida {id_partida}.")
                 
                     
                 

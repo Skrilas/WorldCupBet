@@ -14,6 +14,7 @@ class TimeService:
     #USO ÚNICO PARA O PREENCHIMENTO DO BANCO!
     @staticmethod
     def criar_times() -> None:
+        """Obtém os times da API externa e os cadastra no banco de dados."""
         times = GerenciadorApiCopa.obter_dados_copa("teams")
         with Session(engine) as session:
             repo = TimeRepository(session)
@@ -31,6 +32,7 @@ class TimeService:
 
     @staticmethod
     def buscar_time_por_id(id: int) -> Time:
+        """Retorna um time pelo seu identificador ou gera erro caso não seja encontrado."""
         with Session(engine) as session:
             repo = TimeRepository(session)
 
@@ -41,6 +43,7 @@ class TimeService:
         
     @staticmethod
     def listar_times() -> list[Time]:
+        """Retorna todos os times cadastrados no banco de dados."""
         with Session(engine) as session:
             repo = TimeRepository(session)
 
@@ -48,6 +51,7 @@ class TimeService:
         
     @staticmethod
     def buscar_historico_copas(time_id: int) -> list[HistoricoCopa]:
+        """Consulta e retorna o histórico de participações de um time em Copas do Mundo."""
         time = TimeService.buscar_time_por_id(time_id)
 
         historico_copas = GerenciadoApiHistorico.obter_historico_copas_time(time.nome)
@@ -58,6 +62,7 @@ class TimeService:
     
     @staticmethod
     def _preencher_historico_copa(appearances: list[dict]) -> list[HistoricoCopa]:
+        """Converte os dados de participações da API em objetos HistoricoCopa."""
         historicos: list[HistoricoCopa] = []
         for appearance in appearances:
             group_stage = appearance["groupStage"]
